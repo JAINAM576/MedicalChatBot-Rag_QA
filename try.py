@@ -25,6 +25,6 @@
 # print(llm.invoke("Write me a ballad about LangChain"))
 
 
-from src.helper import download_huggingface_embedding
+# from src.helper import download_huggingface_embedding
 
-embedding_model=download_huggingface_embedding()
+# embedding_model=download_huggingface_embedding()
