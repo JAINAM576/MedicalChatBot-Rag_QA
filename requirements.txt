@@ -9,3 +9,4 @@ langchain_openai
 langchain_experimental
 langchain-google-genai
 pandas
+streamlit
