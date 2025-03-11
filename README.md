@@ -1,6 +1,6 @@
 # 🏥 Medical Chatbot using RAG (Retrieval-Augmented Generation)
 
-**Streamlit url:** https://jainam576-medicalchatbot-app-oerd0x.streamlit.app/
+**Project Demo:** https://jainam576-medicalchatbot-app-oerd0x.streamlit.app/
 
 
 ## 📌 Overview
