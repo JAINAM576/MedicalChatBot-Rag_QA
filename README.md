@@ -1,5 +1,8 @@
 # 🏥 Medical Chatbot using RAG (Retrieval-Augmented Generation)
 
+**Streamlit url:** https://jainam576-medicalchatbot-app-oerd0x.streamlit.app/
+
+
 ## 📌 Overview
 Welcome to the **Medical Chatbot**, an AI-powered system designed to provide medical-related answers using **Retrieval-Augmented Generation (RAG)**. This chatbot utilizes **LangChain, Pinecone, and Google Gemini AI** to retrieve relevant medical information and generate responses.
 
@@ -102,4 +105,3 @@ streamlit run app.py
 ## 👨‍💻 Developer Information
 **Created by:** Jainam Sanghavi  
 💡 *Feel free to contribute or improve this project!*
-
