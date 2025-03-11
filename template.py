@@ -10,7 +10,6 @@ set_of_files=[
 "src/prompt.py",
 ".env",
 "app.py",
-"setup.py",
 "research/trail.ipynb"
 ]
 
