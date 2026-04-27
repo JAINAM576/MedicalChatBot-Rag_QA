@@ -11,12 +11,10 @@ langchain-text-splitters
 langchain-classic
 
 # Vector DB & AI
-pinecone[grpc]
 groq
 sentence-transformers
 transformers
 torchvision
-googleapis-common-protos
 pinecone==5.4.2
 
 # Data & Utils
@@ -25,4 +23,14 @@ pandas
 numpy
 python-dotenv
 pydantic
-protobuf==3.20.3
+
+# Use a v4 version that satisfies Pinecone and avoids the v5 crash
+protobuf==4.25.3
+
+# Use a stable Pinecone version
+pinecone[grpc]==5.4.2
+
+# Include the missing common protos
+googleapis-common-protos
+pinecone-plugin-interface
+
