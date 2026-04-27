@@ -17,6 +17,7 @@ sentence-transformers
 transformers
 torchvision
 googleapis-common-protos
+pinecone-plugin-interface
 
 # Data & Utils
 pypdf
