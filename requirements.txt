@@ -14,6 +14,7 @@ groq
 sentence-transformers
 transformers
 huggingface-hub
+torchvision
 
 # Data & PDF
 pypdf
