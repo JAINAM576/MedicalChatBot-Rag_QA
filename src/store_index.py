@@ -2,7 +2,7 @@ from pinecone.grpc import PineconeGRPC as Pinecone
 from pinecone import ServerlessSpec
 from langchain_pinecone import PineconeVectorStore
 from dotenv import load_dotenv
-from src.helper import load_extract_pdf, document_to_chunks,download_huggingface_embedding
+from src.helper import load_extract_pdf, document_to_chunks, download_huggingface_embedding
 
 import os
 
@@ -10,11 +10,14 @@ import os
 
 load_dotenv()
 
-pdf_path="Data/Gale Encyclopedia of Medicine Vol. 1 (A-B).pdf"
-dir_path="Data/"
+pdf_path = "data/Gale Encyclopedia of Medicine Vol. 1 (A-B).pdf"
+dir_path = "data/"
 
-PINECONE_API_KEY=os.environ.get("PINECONE_API_KEY")
-os.environ["PINECONE_API_KEY"]=PINECONE_API_KEY
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+if not PINECONE_API_KEY:
+    raise ValueError(
+        "PINECONE_API_KEY is missing. Add it to your .env file or set it in your environment before running the app."
+    )
 
 def make_db(index_name,dir_path,run):
     if not run : return 
@@ -58,7 +61,7 @@ def get_retriver(loaded):
         index_name=index_name,
         embedding=loaded
     )
-    reteriver=docretrival.as_retriever(search_type="similarity",search_kwargs={"k":3})
+    reteriver=docretrival.as_retriever(search_type="similarity",search_kwargs={"k":5})
     return reteriver
 
 

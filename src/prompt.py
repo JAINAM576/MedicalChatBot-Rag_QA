@@ -1,7 +1,7 @@
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.prompts import ChatPromptTemplate
 
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+from langchain_classic.chains import create_retrieval_chain
 
 system_prompt = """
 You are an intelligent and helpful assistant, designed to provide clear and concise answers based on the retrieved context.
@@ -16,6 +16,10 @@ You are an intelligent and helpful assistant, designed to provide clear and conc
 - If the provided context contains relevant information, answer in a simple, easy-to-understand manner.  
 - If the context does not include the answer or is unrelated to the query, respond with: **"I don't know."**  
 - For general greetings, reply politely, introducing yourself as a chatbot assistant and offering help with PDFs (e.g., **"I’m your chatbot assistant! You can ask me anything related to PDFs. How can I assist you today?"**).  
+- Prioritize medically accurate language and avoid making unsupported claims.
+- Keep answers concise and practical. Use short bullets only when it improves readability.
+- If relevant, end with a brief note like: "Based on the indexed medical PDF context."
+- Never invent citations, page numbers, or facts that are not present in the provided context.
 ### Context:
 {context}
 
@@ -26,4 +30,24 @@ prompt=ChatPromptTemplate.from_messages(
         ("system",system_prompt),
         ("human","{input}")
     ]
+)
+
+small_talk_prompt = ChatPromptTemplate.from_messages(
+  [
+    (
+      "system",
+      """
+You are a friendly chatbot assistant for a medical PDF Q&A app.
+
+### Response Rules:
+- If the user greets you or says something casual/out of context, reply warmly and naturally.
+- Introduce yourself briefly as the chatbot assistant.
+- Invite the user to ask questions about the medical PDF.
+- Do not mention sources, pages, retrieval, or citations.
+- Keep the answer short and human-like.
+- Do not invent medical facts.
+""",
+    ),
+    ("human", "{input}"),
+  ]
 )

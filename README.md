@@ -14,23 +14,24 @@ Welcome to the **Medical Chatbot**, an AI-powered system designed to provide med
 
 ## 📂 Project Structure
 ```
-📁 jainam576-medicalchatbot/
-├── 📜 README.md            # Project documentation
-├── 🏗️ app.py               # Streamlit web application
-├── 📌 models_name.py       # Available Gemini models
-├── ⚙️ output_generation.py # Query processing & LLM integration
-├── 📜 requirements.txt     # Python dependencies
-├── 📜 requirements1.txt    # Conda dependencies
-├── 📌 store_index.py       # Storing & retrieving embeddings
-├── 📝 template.py          # Manages project structure & logs
-├── 🔬 try.py               # Testing scripts
-├── 📁 Data/                # Data source (Medical PDF)
-├── 📁 models/              # Pretrained embedding model
-├── 📁 research/            # Research notebook
-└── 📁 src/                 # Core functionalities
+📁 MedicalChatBot-Rag_QA/
+├── 📜 README.md             # Project documentation
+├── 🏗️ app.py                # Streamlit web application
+├── 📜 requirements.txt      # Python dependencies
+├── 📁 data/                 # Data source (Medical PDF, gitignored)
+├── 📁 models/               # Pretrained embedding model (gitignored)
+├── 📁 research/
+│   └── 📓 trial.ipynb       # Experimentation notebook
+├── 📁 backend/
+│   ├── 🚀 main.py           # FastAPI application
+│   └── 📁 ui/               # HTML templates & static assets
+└── 📁 src/                  # Core package
     ├── 📌 __init__.py
-    ├── 🛠️ helper.py         # Utility functions (loading, processing, embedding)
-    └── 🗂️ prompt.py         # System prompt & chat templates
+    ├── 🛠️ helper.py          # PDF loading, chunking & embedding utilities
+    ├── 🗂️ prompt.py          # System prompt & chat templates
+    ├── ⚙️ output_generation.py # LLM response generation
+    ├── 📌 models_name.py     # Groq model listing
+    └── 📌 store_index.py     # Pinecone vector store & retrieval
 ```
 
 ---
@@ -50,7 +51,7 @@ Welcome to the **Medical Chatbot**, an AI-powered system designed to provide med
 
 ### Step 3️⃣: **Retrieval & LLM Response Generation**
 🔍 **How does the chatbot retrieve & respond?**
-1. Retrieves **top 3 most relevant chunks** using **cosine similarity**.
+1. Retrieves **top 5 most relevant chunks** using **cosine similarity**.
 2. Formats retrieved chunks into a **system prompt**.
 3. Passes the **user query + context** to **Google Gemini AI**.
 4. Generates a **human-like medical response**.
@@ -83,22 +84,29 @@ conda activate medicalchatbot
 ```bash
 pip install -r requirements.txt
 ```
-📦 **Using Conda**
-```bash
-conda install --file requirements1.txt
-```
 
-### 3️⃣ **Run the Chatbot**
-🚀 **Launch the Web Interface**
+
+### 3️⃣ **Run the Streamlit Chatbot**
+🚀 **Launch the Streamlit Interface**
 ```bash
 streamlit run app.py
 ```
 
----
+### 4️⃣ **Run the FastAPI Chatbot (New UI)**
+🚀 **Launch the FastAPI Interface**
+```bash
+uvicorn backend.main:app --reload
+```
 
-## 📌 Logs & Project Structure Management
-📜 `template.py` manages **project structure** & logs file creation events.
-- Logs stored include **file creation time and details**.
+#### FastAPI UI Features
+- Minimalistic chat interface with model selector
+- Real-time "thinking" status while generating answers
+- Response time per answer
+- Source cards with PDF name, page number, and evidence snippet
+- Clickable source links to open PDF at the source page
+- Copy response and clear chat actions
+
+---
 
 ---
 

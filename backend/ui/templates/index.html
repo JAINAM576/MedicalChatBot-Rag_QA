@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical RAG Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ request.url_for('static', path='css/base/tokens.css') }}">
+  <link rel="stylesheet" href="{{ request.url_for('static', path='css/pages/chat.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <h1>Medical Chat</h1>
+        <p>Ask evidence-grounded questions from your indexed medical PDF.</p>
+      </div>
+      <div class="actions">
+        <select id="modelSelect" aria-label="Model selection">
+          {% for model in models %}
+            <option value="{{ model }}">{{ model }}</option>
+          {% endfor %}
+        </select>
+        <button id="clearChatBtn" class="secondary">Clear Chat</button>
+      </div>
+    </header>
+
+    <section class="layout-grid">
+      <section class="chat-panel">
+        <section id="chatWindow" class="chat-window" aria-live="polite">
+          <article class="msg assistant">
+            <div class="meta">
+              <span>Assistant</span>
+              <span class="time">Ready</span>
+            </div>
+            <div class="bubble">
+              I can answer questions from the indexed medical PDF and show where each answer came from.
+            </div>
+          </article>
+        </section>
+
+        <form id="chatForm" class="composer">
+          <textarea id="queryInput" placeholder="Ask a medical question from the PDF..." rows="2" required></textarea>
+          <div class="composer-row">
+            <div id="thinkingState" class="thinking hidden">Thinking...</div>
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="evidence-panel">
+        <div class="evidence-header">Evidence Viewer</div>
+        <div id="evidenceMeta" class="evidence-meta">No source selected yet.</div>
+        <iframe id="pdfViewer" class="pdf-viewer" title="Source PDF preview"></iframe>
+        <div class="evidence-chunk-wrap">
+          <div class="evidence-subtitle">Highlighted Chunk</div>
+          <div id="evidenceChunk" class="evidence-chunk">The matched source snippet will appear here.</div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <template id="sourcesTemplate">
+    <section class="sources">
+      <h3>Sources</h3>
+      <div class="source-list"></div>
+    </section>
+  </template>
+
+  <script>
+    window.INITIAL_MODELS = {{ models | tojson }};
+  </script>
+  <script src="{{ request.url_for('static', path='js/pages/chat.js') }}"></script>
+</body>
+</html>

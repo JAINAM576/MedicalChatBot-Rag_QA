@@ -1,0 +1,37 @@
+# ── Version control ─────────────────────────────────────────────
+.git
+.gitignore
+
+# ── IDE / editor config ──────────────────────────────────────────
+.vscode
+.devcontainer
+
+# ── Python bytecode ──────────────────────────────────────────────
+__pycache__
+**/__pycache__
+*.py[cod]
+*.pyo
+
+# ── Secrets – NEVER bake API keys into the image ─────────────────
+.env
+*.env
+
+# ── Streamlit UI (not needed for FastAPI inference) ───────────────
+app.py
+
+# ── Large binary assets (not needed at runtime) ──────────────────
+# PDF data – already indexed in Pinecone; not used during inference
+data/
+# Local model weights – re-downloaded during Docker build from HuggingFace
+models/
+
+# ── Research / notebooks ─────────────────────────────────────────
+research/
+
+# ── Dependency files (already consumed during build) ─────────────
+requirements.txt
+requirements_inference.txt
+
+# ── Docs ─────────────────────────────────────────────────────────
+README.md
+cleanup_summary.md
