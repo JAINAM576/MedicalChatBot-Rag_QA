@@ -16,6 +16,7 @@ groq
 sentence-transformers
 transformers
 torchvision
+googleapis-common-protos
 
 # Data & Utils
 pypdf
