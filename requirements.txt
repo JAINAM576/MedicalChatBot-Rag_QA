@@ -15,7 +15,7 @@ groq
 sentence-transformers
 transformers
 torchvision
-pinecone==5.4.2
+pinecone
 
 # Data & Utils
 pypdf
@@ -25,10 +25,10 @@ python-dotenv
 pydantic
 
 # Use a v4 version that satisfies Pinecone and avoids the v5 crash
-protobuf==4.25.3
+protobuf
 
 # Use a stable Pinecone version
-pinecone[grpc]==5.4.2
+pinecone[grpc]
 
 # Include the missing common protos
 googleapis-common-protos
