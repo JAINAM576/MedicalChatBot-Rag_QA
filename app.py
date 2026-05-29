@@ -119,7 +119,7 @@ with st.sidebar:
     st.divider()
     st.markdown("**Knowledge Base**")
     st.markdown("📖 Gale Encyclopedia of Medicine Vol. 1 (A–B)")
-    st.markdown("🗂️ ~5876 chunks · 384-dim embeddings · Pinecone")
+
 
     st.divider()
     if st.button("🗑️ Clear Chat", use_container_width=True):
