@@ -1,21 +1,19 @@
 # Base Framework
 streamlit
 
-# LangChain Stack (Let pip resolve the versions)
+# LangChain Stack
 langchain
 langchain-community
 langchain-core
 langchain-groq
 langchain-pinecone
 langchain-text-splitters
-langchain-classic
 
 # Vector DB & AI
 groq
 sentence-transformers
 transformers
 torchvision
-
 
 # Data & Utils
 pypdf
@@ -24,13 +22,10 @@ numpy
 python-dotenv
 pydantic
 
-# Use a v4 version that satisfies Pinecone and avoids the v5 crash
-protobuf
+# Pinecone - use REST instead of gRPC to avoid proto conflicts
+pinecone==7.0.2
 
-# Use a stable Pinecone version
-pinecone[grpc]==7.0.2
-
-# Include the missing common protos
-googleapis-common-protos
+# Protobuf pinned to avoid duplicate symbol crash
+protobuf==4.25.5
+googleapis-common-protos==1.63.2
 pinecone-plugin-interface
-
