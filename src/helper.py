@@ -58,7 +58,6 @@ def download_huggingface_embedding(local_path="models/all-MiniLM-L6-v2"):
 
 
 
-# making custome chain 
 
 def custom_rag(reteriver,prompt,llm,query):
     retrived_document=reteriver.invoke(query)
@@ -67,3 +66,34 @@ def custom_rag(reteriver,prompt,llm,query):
     formatted_prompt=prompt.format(context=context_text,input=query)
     response=llm.invoke(formatted_prompt)
     return response.content
+
+
+def get_pdf_page_text(pdf_path: str, page_num_1based: int) -> str:
+    """Extract full text of a specific page from a PDF file."""
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(pdf_path)
+        if page_num_1based < 1 or page_num_1based > len(reader.pages):
+            return f"Invalid page number {page_num_1based}. The document has {len(reader.pages)} pages."
+        page = reader.pages[page_num_1based - 1]
+        return page.extract_text() or "No text could be extracted from this page."
+    except Exception as e:
+        return f"Error extracting page: {e}"
+
+
+def get_pdf_page_image(pdf_path: str, page_num_1based: int) -> bytes | None:
+    try:
+        import fitz  
+        doc = fitz.open(pdf_path)
+        if page_num_1based < 1 or page_num_1based > len(doc):
+            print(f"⚠️ Page {page_num_1based} is out of range for {pdf_path} (length {len(doc)}).")
+            return None
+        page = doc.load_page(page_num_1based - 1)
+        pix = page.get_pixmap(dpi=150)
+        return pix.tobytes("png")
+    except Exception as e:
+        import traceback
+        print(f"⚠️ Error rendering PDF page image: {e}")
+        traceback.print_exc()
+        return None
+
