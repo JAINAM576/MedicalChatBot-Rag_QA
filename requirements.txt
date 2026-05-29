@@ -15,7 +15,7 @@ groq
 sentence-transformers
 transformers
 torchvision
-pinecone
+
 
 # Data & Utils
 pypdf
@@ -28,7 +28,7 @@ pydantic
 protobuf
 
 # Use a stable Pinecone version
-pinecone[grpc]
+pinecone[grpc]==7.0.2
 
 # Include the missing common protos
 googleapis-common-protos
