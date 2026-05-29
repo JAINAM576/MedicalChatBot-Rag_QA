@@ -22,10 +22,10 @@ numpy
 python-dotenv
 pydantic
 
-# Pinecone - use REST instead of gRPC to avoid proto conflicts
+# Pinecone - REST only (no gRPC)
 pinecone==7.0.2
+pinecone-plugin-interface
 
-# Protobuf pinned to avoid duplicate symbol crash
+# Protobuf pinned for stability
 protobuf==4.25.5
 googleapis-common-protos==1.63.2
-pinecone-plugin-interface
