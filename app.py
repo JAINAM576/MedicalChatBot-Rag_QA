@@ -49,11 +49,18 @@ def load_embedding_model():
 def render_sources_section(sources, expanded=False, key_prefix=""):
     with st.expander(f"📚 Sources ({len(sources)} chunks retrieved)", expanded=expanded):
         for idx, src in enumerate(sources):
+            # Normalize path separators to handle Windows paths in metadata when running on Linux
+            clean_title = src['title'].replace('\\', '/').split('/')[-1]
             page_num = src.get("page")
             page_label = f"Page {page_num}" if page_num else "Page N/A"
-            st.markdown(f"##### Chunk {idx + 1}: **{src['title']}** · `{page_label}`")
+            st.markdown(f"##### Chunk {idx + 1}: **{clean_title}** · `{page_label}`")
             
             tab1, tab2, tab3 = st.tabs(["📝 Snippet", "📖 Full Page Text", "🖼️ Original PDF Page"])
+            
+            # Resolve correct path based on OS case-sensitivity (Data vs data)
+            pdf_path = os.path.join("Data", clean_title)
+            if not os.path.exists(pdf_path):
+                pdf_path = os.path.join("data", clean_title)
             
             with tab1:
                 st.caption("Retrieved matching chunk used to answer the question:")
@@ -61,10 +68,6 @@ def render_sources_section(sources, expanded=False, key_prefix=""):
                 
             with tab2:
                 if page_num:
-                    pdf_path = os.path.join("Data", src['title'])
-                    if not os.path.exists(pdf_path):
-                        pdf_path = os.path.join("data", src['title'])
-                    
                     if os.path.exists(pdf_path):
                         with st.spinner("Extracting page text..."):
                             full_text = get_pdf_page_text(pdf_path, page_num)
@@ -84,17 +87,13 @@ def render_sources_section(sources, expanded=False, key_prefix=""):
                     
             with tab3:
                 if page_num:
-                    pdf_path = os.path.join("Data", src['title'])
-                    if not os.path.exists(pdf_path):
-                        pdf_path = os.path.join("data", src['title'])
-                        
                     if os.path.exists(pdf_path):
                         with st.spinner("Rendering PDF page..."):
                             img_bytes = get_pdf_page_image(pdf_path, page_num)
                         if img_bytes:
                             st.image(
                                 img_bytes,
-                                caption=f"Page {page_num} of {src['title']}",
+                                caption=f"Page {page_num} of {clean_title}",
                                 use_container_width=True
                             )
                         else:
