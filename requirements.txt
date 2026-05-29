@@ -17,6 +17,7 @@ torchvision
 
 # Data & Utils
 pypdf
+pymupdf
 pandas
 numpy
 python-dotenv
