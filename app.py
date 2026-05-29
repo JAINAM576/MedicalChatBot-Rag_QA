@@ -6,8 +6,10 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 
+import os
 from src.models_name import get_rag_models
 from src.output_generation import output_generation_with_sources, output_generation_small_talk
+from src.helper import get_pdf_page_text, get_pdf_page_image
 
 load_dotenv()
 
@@ -44,6 +46,66 @@ def load_embedding_model():
     return HuggingFaceBgeEmbeddings(model_name=EMBEDDING_MODEL_PATH)
 
 
+def render_sources_section(sources, expanded=False, key_prefix=""):
+    with st.expander(f"📚 Sources ({len(sources)} chunks retrieved)", expanded=expanded):
+        for idx, src in enumerate(sources):
+            page_num = src.get("page")
+            page_label = f"Page {page_num}" if page_num else "Page N/A"
+            st.markdown(f"##### Chunk {idx + 1}: **{src['title']}** · `{page_label}`")
+            
+            tab1, tab2, tab3 = st.tabs(["📝 Snippet", "📖 Full Page Text", "🖼️ Original PDF Page"])
+            
+            with tab1:
+                st.caption("Retrieved matching chunk used to answer the question:")
+                st.markdown(f"*{src.get('snippet', '')}*")
+                
+            with tab2:
+                if page_num:
+                    pdf_path = os.path.join("Data", src['title'])
+                    if not os.path.exists(pdf_path):
+                        pdf_path = os.path.join("data", src['title'])
+                    
+                    if os.path.exists(pdf_path):
+                        with st.spinner("Extracting page text..."):
+                            full_text = get_pdf_page_text(pdf_path, page_num)
+                        st.markdown("**Complete Page Text:**")
+                        st.text_area(
+                            label="Page Text",
+                            value=full_text,
+                            height=250,
+                            disabled=True,
+                            label_visibility="collapsed",
+                            key=f"{key_prefix}_text_{idx}_{page_num}"
+                        )
+                    else:
+                        st.error(f"PDF file not found at: `{pdf_path}`")
+                else:
+                    st.warning("No page number metadata available for this source.")
+                    
+            with tab3:
+                if page_num:
+                    pdf_path = os.path.join("Data", src['title'])
+                    if not os.path.exists(pdf_path):
+                        pdf_path = os.path.join("data", src['title'])
+                        
+                    if os.path.exists(pdf_path):
+                        with st.spinner("Rendering PDF page..."):
+                            img_bytes = get_pdf_page_image(pdf_path, page_num)
+                        if img_bytes:
+                            st.image(
+                                img_bytes,
+                                caption=f"Page {page_num} of {src['title']}",
+                                use_container_width=True
+                            )
+                        else:
+                            st.error("Failed to render the PDF page. Ensure the page number is valid.")
+                    else:
+                        st.error(f"PDF file not found at: `{pdf_path}`")
+                else:
+                    st.warning("No page number metadata available for this source.")
+            st.divider()
+
+
 st.set_page_config(page_title="Medical RAG Assistant", page_icon="🏥", layout="wide")
 
 st.title("🏥 Medical RAG Assistant")
@@ -58,7 +120,7 @@ with st.sidebar:
     st.divider()
     st.markdown("**Knowledge Base**")
     st.markdown("📖 Gale Encyclopedia of Medicine Vol. 1 (A–B)")
-
+    st.markdown("🗂️ ~5876 chunks · 384-dim embeddings · Pinecone")
 
     st.divider()
     if st.button("🗑️ Clear Chat", use_container_width=True):
@@ -68,16 +130,11 @@ with st.sidebar:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-for msg in st.session_state.messages:
+for msg_idx, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
         if msg.get("sources"):
-            with st.expander(f"📚 Sources ({len(msg['sources'])} chunks retrieved)", expanded=False):
-                for src in msg["sources"]:
-                    page_label = f"Page {src['page']}" if src.get("page") else "Page N/A"
-                    st.markdown(f"**{src['title']}** · `{page_label}`")
-                    st.caption(src.get("snippet", ""))
-                    st.divider()
+            render_sources_section(msg["sources"], expanded=False, key_prefix=f"hist_{msg_idx}")
         if msg.get("meta"):
             st.caption(msg["meta"])
 
@@ -110,12 +167,7 @@ if query:
                 st.markdown(answer)
 
                 if sources:
-                    with st.expander(f"📚 Sources ({len(sources)} chunks retrieved)", expanded=True):
-                        for src in sources:
-                            page_label = f"Page {src['page']}" if src.get("page") else "Page N/A"
-                            st.markdown(f"**{src['title']}** · `{page_label}`")
-                            st.caption(src.get("snippet", ""))
-                            st.divider()
+                    render_sources_section(sources, expanded=True, key_prefix="new_response")
 
                 st.caption(meta)
 
